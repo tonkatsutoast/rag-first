@@ -4,12 +4,12 @@ from langchain_core.language_models import BaseLLM
 from typing import Optional, Dict, Any
 from rag_first.config.settings import settings
 import logging
-logger = logging(__name__)
+logger = logging.getLogger(__name__)
 
 """Manage local LLM connections (Ollama, LM Studio)"""
 def get_ollama_llm(
     model: str = "llama3.2:3b",
-    temperature: float 0.7,
+    temperature: float = 0.7,
     **kwargs
 ) -> BaseLLM:
     """
@@ -22,7 +22,7 @@ def get_ollama_llm(
         Ollama LLM instance
     """
     logger.info(f"Initializing Ollama with model: {model}")
-    return Ollama(
+    return OllamaLLM(
         model=model,
         base_url=settings.OLLAMA_BASE_URL,
         temperature=temperature,

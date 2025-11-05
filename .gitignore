@@ -5,6 +5,13 @@ build/
 dist/
 wheels/
 *.egg-info
+.env
 
 # Virtual environments
 .venv
+
+# Local data directories
+data/raw/
+data/vectorstore/
+examples/
+*.DS_Store

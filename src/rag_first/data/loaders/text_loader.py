@@ -44,16 +44,29 @@ class TextFileLoader:
     def load_directory(
         self,
         directory_path: str | Path,
-        glob_pattern: str = "**.*.txt",
+        glob_pattern: str = "**/*.txt",
         show_progress: bool = True
     )-> List[Document]:
-        """Load all text files from directory"""
+        """Load all files from directory with automatic file type detection"""
+        # Determine loader class based on glob pattern
+        pattern_lower = glob_pattern.lower()
+        if '.pdf' in pattern_lower:
+            loader_cls = PyPDFLoader
+            loader_kwargs = {}
+        elif '.md' in pattern_lower or '.markdown' in pattern_lower:
+            loader_cls = UnstructuredMarkdownLoader
+            loader_kwargs = {}
+        else:
+            # Default to text loader
+            loader_cls = TextLoader
+            loader_kwargs = {"encoding": "utf-8"}
+
         loader = DirectoryLoader(
             str(directory_path),
-            glob_pattern=glob_pattern,
-            loader_cls=TextLoader,
+            glob=glob_pattern,
+            loader_cls=loader_cls,
             show_progress=show_progress,
-            loader_kwargs={"encoding": "utf-8"}
+            loader_kwargs=loader_kwargs
         )
         documents = loader.load()
         return self.text_splitter.split_documents(documents)

@@ -3,9 +3,9 @@ from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from typing import List, Optional, Dict, Any
 from pathlib import Path
-impot logging
+import logging
 
-logger = logger.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 class ChromaManager:
     """Manage ChromaDB vector store operations"""
@@ -25,6 +25,14 @@ class ChromaManager:
         self.embedding_function = embedding_function
         self.persist_directory = str(persist_directory)
         self.collection_name = collection_name
+
+        # Initialize the Chroma vector store
+        self.vector_store = Chroma(
+            collection_name=collection_name,
+            embedding_function=embedding_function,
+            persist_directory=self.persist_directory
+        )
+
         logger.info(
             f"ChromaDB initialized: {collection_name} at {persist_directory}"
         )
@@ -51,10 +59,11 @@ class ChromaManager:
         all_ids = []
         for i in range(0, len(documents), batch_size):
             batch_docs = documents[i:i + batch_size]
-            added_id = self.vector_store.add_documents(
+            batch_ids = ids[i:i + batch_size] if ids else None
+            added_ids = self.vector_store.add_documents(
                 documents=batch_docs,
                 ids=batch_ids
-            )        
+            )
             all_ids.extend(added_ids)
             logger.info(
                 f"Added batch {i//batch_size + 1}: "
@@ -97,7 +106,7 @@ class ChromaManager:
         Returns:
             List of similar documents along with a similarity score
         """
-        return self.vector_store.similarity_search(
+        return self.vector_store.similarity_search_with_score(
             query=query,
             k=k,
             filter=filter

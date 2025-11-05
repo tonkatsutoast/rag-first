@@ -3,7 +3,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEndpoint
 from langchain_core.language_models import BaseLLM
-from typing import Optional, 
+from typing import Optional
 from rag_first.config.settings import settings
 from rag_first.config.llm_config import LLMProvider
 import logging
@@ -38,7 +38,7 @@ def get_anthropic_llm(
     )
 
 def get_google_llm(
-    model: str = "gemini-1.5-pro",
+    model: str = "gemini-2.5-flash",
     temperature: float = 0.7,
     **kwargs
 ) -> BaseLLM:
@@ -86,10 +86,12 @@ def get_llm(
     provider = provider.lower()
 
     match provider:
-        case "ollama": 
+        case "ollama":
             from rag_first.llm.local_llm import get_ollama_llm
             return get_ollama_llm(
-                model=model or "llama3.2:3b"
+                model=model or "llama3.2:3b",
+                temperature=temperature,
+                **kwargs
             )
         case "llm_studio": 
             from rag_first.llm.local_llm import get_lm_studio_llm
@@ -106,7 +108,13 @@ def get_llm(
             )
         case "google":
             return get_google_llm(
-                model=model or "gemini-1.5-pro",
+                model=model or "gemini-2.5-flash",
+                temperature=temperature,
+                **kwargs
+            )
+        case "anthropic":
+            return get_anthropic_llm(
+                model=model or "claude-3-5-sonnet-20241022",
                 temperature=temperature,
                 **kwargs
             )

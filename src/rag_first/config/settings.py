@@ -16,8 +16,8 @@ class Settings(BaseSettings):
 
     PROJECT_ROOT: Path = Path(__file__).parent.parent.parent.parent
     DATA_DIR: Path = PROJECT_ROOT / "data"
-    RAW_DATA_DIR: Path = PROJECT_ROOT / "raw"
-    PROCESSED_DATA_DIR: Path = PROJECT_ROOT / "processed"
+    RAW_DATA_DIR: Path = DATA_DIR / "raw"
+    PROCESSED_DATA_DIR: Path = DATA_DIR / "processed"
 
     # Vector store
     CHROMA_PERSIST_DIRECTORY: str = str(DATA_DIR / "vectorstore" / "chroma_db")
@@ -30,13 +30,14 @@ class Settings(BaseSettings):
     # Local LLM
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     LOCAL_MODEL_NAME: str = "llama3.2:3b"
+    LLM_MODEL: str = "llama3.2:3b"  # Alternative name for LOCAL_MODEL_NAME
 
     # Cloud LLM API Keys
     OPENAI_API_KEY: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
     GOOGLE_API_KEY: Optional[str] = None
     HUGGINGFACE_API_KEY: Optional[str] = None
-
+    
     # Retrieval
     TOP_K_RESULTS: int = 5
     SIMILARITY_THRESHOLD: float = 0.7

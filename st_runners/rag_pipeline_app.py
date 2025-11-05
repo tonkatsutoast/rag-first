@@ -268,12 +268,14 @@ elif step == "3. Query RAG System":
     with col1:
         llm_provider = st.selectbox(
             "LLM Provider",
-            ["ollama", "openai", "anthropic", "google"],
+            ["ollama", "huggingface", "openai", "anthropic", "google"],
             help="Choose your language model provider"
         )
     with col2:
         if llm_provider == "ollama":
-            llm_model = st.text_input("Model", value="llama3.2")
+            llm_model = st.text_input("Model", value="llama3.2:3b")
+        elif llm_provider == "huggingface":
+            llm_model = st.text_input("Model", value="meta-llama/Llama-3.2-3B")
         elif llm_provider == "openai":
             llm_model = st.text_input("Model", value="gpt-4o-mini")
         elif llm_provider == "anthropic":
